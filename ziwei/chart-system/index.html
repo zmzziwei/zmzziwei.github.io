@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>莊明正紫微斗數排盤</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Serif+TC:wght@400;700&display=swap" />
+    <script type="module" crossorigin src="/ziwei/chart-system/assets/index-CvBbt_aZ.js"></script>
+    <link rel="stylesheet" crossorigin href="/ziwei/chart-system/assets/index-CIS_onmX.css">
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1 data-i18n="title">莊明正紫微斗數排盤</h1>
+        <div class="header-buttons">
+          <div class="lang-switch" role="group" aria-label="語言 Language">
+            <button type="button" data-lang="zh" lang="zh-Hant" aria-pressed="true" title="繁體中文">繁中</button>
+            <button type="button" data-lang="hans" lang="zh-Hans" aria-pressed="false" title="简体中文">简中</button>
+            <button type="button" data-lang="en" lang="en" aria-pressed="false">English</button>
+            <button type="button" data-lang="bi" lang="zh-Hant" aria-pressed="false" title="中英對照 Chinese with English">中英</button>
+          </div>
+          <button type="button" id="theme-toggle" aria-live="polite">主題：跟隨系統</button>
+          <div class="zoom-bar" role="group" aria-label="放大檢視" data-i18n-aria="zoom">
+            <button type="button" id="zoom-out" aria-label="縮小" data-i18n-aria="zoomOut">A－</button>
+            <button type="button" id="zoom-reset" aria-label="恢復原本大小" data-i18n-aria="zoomReset">100%</button>
+            <button type="button" id="zoom-in" aria-label="放大" data-i18n-aria="zoomIn">A＋</button>
+          </div>
+        </div>
+      </header>
+
+      <form id="birth-form" autocomplete="off">
+        <label class="field">
+          <span data-i18n="name">姓名</span>
+          <input name="name" id="f-name" type="text" maxlength="20" placeholder="可留空" data-i18n-placeholder="namePlaceholder" />
+        </label>
+
+        <fieldset class="field">
+          <legend data-i18n="gender">性別</legend>
+          <label><input type="radio" name="gender" value="男" checked /> <span data-i18n="male">男</span></label>
+          <label><input type="radio" name="gender" value="女" /> <span data-i18n="female">女</span></label>
+        </fieldset>
+
+        <fieldset class="field">
+          <legend data-i18n="calendar">曆法</legend>
+          <label><input type="radio" name="calendar" value="solar" /> <span data-i18n="solar">國曆</span></label>
+          <label><input type="radio" name="calendar" value="lunar" checked /> <span data-i18n="lunar">農曆</span></label>
+        </fieldset>
+
+        <div class="field date-row">
+          <label><span data-i18n="year">年</span> <select name="year" id="f-year"></select></label>
+          <label><span data-i18n="month">月</span> <select name="month" id="f-month"></select></label>
+          <label><span data-i18n="day">日</span> <select name="day" id="f-day"></select></label>
+          <label class="leap"><input name="leap" id="f-leap" type="checkbox" /> <span data-i18n="leap">閏月</span></label>
+        </div>
+
+        <label class="field">
+          <span data-i18n="hour">時辰</span>
+          <select name="time" id="f-time"></select>
+        </label>
+
+        <button type="submit" data-i18n="submit">排盤</button>
+      </form>
+
+      <p id="error" role="alert" hidden></p>
+
+      <div class="chart-zoom" id="chart-zoom">
+        <section id="chart" aria-label="命盤" data-i18n-aria="chart"></section>
+      </div>
+      <p class="hint" id="sanfang-note" aria-live="polite">點宮位可以放大文字；點本命（命宮）或大運、流年、斗君所在的宮位，會再標出它的三方四正。再點一次取消。</p>
+      <p class="hint" id="star-legend"><span class="legend-red">紅字</span>為煞星：天空、地劫、火星、鈴星、陀羅、擎羊、天刑。</p>
+
+      <section id="yearly" aria-label="流年" data-i18n-aria="yearly"></section>
+
+      <footer class="site-footer" data-i18n="copyright">版權所有 © 莊明正紫微</footer>
+    </main>
+    <dialog id="share-dialog" aria-labelledby="share-title">
+      <div class="share-panel">
+        <h2 id="share-title" data-i18n="share">分享命盤</h2>
+        <p class="share-note" data-i18n="shareNote">掃描 QR Code 或打開連結，會看到同一張命盤。連結不含姓名。</p>
+        <figure class="share-image">
+          <button type="button" id="chart-thumb" disabled>
+            <img alt="命盤圖片縮圖" data-i18n-alt="imageAlt" />
+          </button>
+          <figcaption data-i18n="imageNote">點圖片放大檢視</figcaption>
+          <button type="button" class="download-image" data-i18n="downloadImage">下載圖片</button>
+          <p class="image-status" aria-live="polite"></p>
+        </figure>
+        <canvas width="300" height="300" aria-label="命盤分享 QR Code" data-i18n-aria="shareQr"></canvas>
+        <div class="share-row">
+          <input id="share-link" type="text" readonly aria-label="分享連結" data-i18n-aria="shareLink" />
+          <button type="button" id="copy-link">複製連結</button>
+        </div>
+        <button type="button" class="close" data-i18n="close">關閉</button>
+      </div>
+    </dialog>
+
+    <dialog id="image-viewer" aria-label="命盤圖片" data-i18n-aria="viewerTitle">
+      <div class="viewer-bar">
+        <button type="button" class="viewer-close" data-i18n="close">關閉</button>
+        <span class="viewer-zoom" aria-live="polite">100%</span>
+        <button type="button" class="download-image" data-i18n="downloadImage">下載圖片</button>
+      </div>
+      <div class="viewer-stage">
+        <img alt="命盤圖片" data-i18n-alt="viewerTitle" draggable="false" />
+      </div>
+      <p class="image-status viewer-status" aria-live="polite"></p>
+      <p class="viewer-hint" data-i18n="viewerHint">雙指縮放、拖曳移動，點兩下放大或還原</p>
+    </dialog>
+  </body>
+</html>
